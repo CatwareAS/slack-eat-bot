@@ -1,4 +1,4 @@
-package com.slack.eatapp.model;
+package com.catware.eatapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
