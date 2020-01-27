@@ -18,6 +18,6 @@ public class Restaurant {
     private String priceLevel;
     private List<String> cuisineTypes;
     private String arrivalTime;
-    private String rating;
-    private String reviewsCount;
+    private double rating;
+    private int reviewsCount;
 }

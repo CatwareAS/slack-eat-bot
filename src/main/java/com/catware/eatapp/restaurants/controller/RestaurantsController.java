@@ -1,41 +1,33 @@
 package com.catware.eatapp.restaurants.controller;
 
-import com.catware.eatapp.restaurants.dao.RestaurantRepository;
-import com.catware.eatapp.restaurants.dao.UrlRepository;
 import com.catware.eatapp.restaurants.model.Restaurant;
-import com.catware.eatapp.restaurants.model.Url;
-import com.catware.eatapp.restaurants.service.ParseService;
+import com.catware.eatapp.restaurants.service.RestaurantsService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
-@RestController
 @Slf4j
+@RestController
 public class RestaurantsController {
 
-    private final ParseService jsoupParseService;
-    private final RestaurantRepository restaurantRepository;
-    private final UrlRepository urlRepository;
+    private final RestaurantsService restaurantsService;
 
-    public RestaurantsController(@Qualifier("JSoupService") ParseService jsoupParseService, RestaurantRepository restaurantRepository, UrlRepository urlRepository) {
-        this.jsoupParseService = jsoupParseService;
-        this.restaurantRepository = restaurantRepository;
-        this.urlRepository = urlRepository;
+    public RestaurantsController(RestaurantsService restaurantsService) {
+        this.restaurantsService = restaurantsService;
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
-    private void refreshRestaurants() {
-        try {
-            log.info("Refreshing restaurants started");
-            Url url = urlRepository.findAll().blockLast();
-            List<Restaurant> restaurants = jsoupParseService.parsePage(url.getUrl());
-            restaurantRepository.saveAll(restaurants).blockLast();
-            log.info("Refreshing restaurants finished");
-        } catch (Exception e) {
-            log.error("Exception while refreshing restaurants list", e);
-        }
+    @GetMapping("/restaurants")
+    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+        return ResponseEntity.ok(restaurantsService.getAllRestaurants());
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<Map<String, List<Restaurant>>> getAllCategories() {
+        return ResponseEntity.ok(restaurantsService.getAllCategories());
     }
 }
+

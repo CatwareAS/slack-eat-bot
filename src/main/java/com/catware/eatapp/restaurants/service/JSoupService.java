@@ -49,15 +49,17 @@ public class JSoupService implements ParseService {
         return restaurants;
     }
 
-    private String extractReviewsCount(Element article) {
+    private int extractReviewsCount(Element article) {
         String ratingAndReviewsCount = article.select(DIV_DIV_DIV_SPAN).last().parent().text();
         ratingAndReviewsCount = ratingAndReviewsCount.replace(PLUS, EMPTY_STRING);
-        return ratingAndReviewsCount.substring(ratingAndReviewsCount.indexOf(OPEN_BRACKET) + 1, ratingAndReviewsCount.indexOf(CLOSE_BRACKET));
+        String reviewsCount = ratingAndReviewsCount.substring(ratingAndReviewsCount.indexOf(OPEN_BRACKET) + 1, ratingAndReviewsCount.indexOf(CLOSE_BRACKET));
+        return Integer.parseInt(reviewsCount);
     }
 
-    private String extractRating(Element article) {
+    private double extractRating(Element article) {
         String ratingAndReviewsCount = article.select(DIV_DIV_DIV_SPAN).last().parent().text();
-        return ratingAndReviewsCount.substring(0, ratingAndReviewsCount.indexOf(OPEN_BRACKET));
+        String rating = ratingAndReviewsCount.substring(0, ratingAndReviewsCount.indexOf(OPEN_BRACKET));
+        return Double.parseDouble(rating);
     }
 
     private String extractArrivalTime(Element article) {
