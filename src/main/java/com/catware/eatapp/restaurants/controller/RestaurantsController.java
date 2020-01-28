@@ -1,5 +1,6 @@
 package com.catware.eatapp.restaurants.controller;
 
+import com.catware.eatapp.restaurants.job.RestaurantsSynchronize;
 import com.catware.eatapp.restaurants.model.Restaurant;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +16,11 @@ import java.util.Map;
 public class RestaurantsController {
 
     private final RestaurantsService restaurantsService;
+    private final RestaurantsSynchronize restaurantsSynchronize;
 
-    public RestaurantsController(RestaurantsService restaurantsService) {
+    public RestaurantsController(RestaurantsService restaurantsService, RestaurantsSynchronize restaurantsSynchronize) {
         this.restaurantsService = restaurantsService;
+        this.restaurantsSynchronize = restaurantsSynchronize;
     }
 
     @GetMapping("/restaurants")
@@ -28,6 +31,12 @@ public class RestaurantsController {
     @GetMapping("/categories")
     public ResponseEntity<Map<String, List<Restaurant>>> getAllCategories() {
         return ResponseEntity.ok(restaurantsService.getAllCategories());
+    }
+
+    @GetMapping("/refresh-restaurants")
+    public ResponseEntity<String> refreshRestaurantsData() {
+        restaurantsSynchronize.refreshRestaurants();
+        return ResponseEntity.ok("Refreshed");
     }
 }
 
