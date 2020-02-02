@@ -1,7 +1,7 @@
 package com.catware.eatapp.controller;
 
 import com.catware.eatapp.model.RestaurantsSlackMessage;
-import com.catware.eatapp.model.ui.Accessory;
+import com.catware.eatapp.model.ui.Element;
 import com.catware.eatapp.model.ui.Option;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +31,12 @@ public class SlackController {
                                                          @RequestParam(value = "command", required = false) String command,
                                                          @RequestParam(value = "text", required = false) String text,
                                                          @RequestParam(value = "response_url", required = false) String responseUrl) {
-        RestaurantsSlackMessage message = new RestaurantsSlackMessage("Choose your restaurants");
-        message.setResponseType("in_channel");
-        Accessory accessory = new Accessory();
-        accessory.setType("radio_buttons");
-        accessory.setActionId("test_actin_id");
-        accessory.setOptions(getRestaurantOptions());
-        message.setAccessory(accessory);
+        RestaurantsSlackMessage message = new RestaurantsSlackMessage();
+        Element optionElement = new Element();
+        optionElement.setType("radio_buttons");
+        optionElement.setActionId("test_actin_id");
+        optionElement.setOptions(getRestaurantOptions());
+        message.getBlocks().add(optionElement);
         return message;
     }
 
