@@ -4,10 +4,12 @@ import com.catware.eatapp.model.Attachment;
 import com.catware.eatapp.model.TestResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/slack/slash")
+@RestController
+@RequestMapping("/slack/slash")
 public class SlackController {
 
     @PostMapping(value = "/restaurants", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -29,6 +31,5 @@ public class SlackController {
         response.getAttachments().add(attachment);
         return response;
     }
-
 
 }
