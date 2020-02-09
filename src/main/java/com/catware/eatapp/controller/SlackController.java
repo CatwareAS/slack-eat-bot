@@ -53,7 +53,7 @@ public class SlackController {
     public RichMessage showAllCuisineTypes() {
         RichMessage richMessage = new RichMessage("Categories of restaurants from UBER EATS");
         Attachment[] cuisineArray = restaurantsService.getAllCategoriesPickMap().entrySet().stream()
-                .map(entry -> entry.getKey() + ") " + entry.getValue() + ";")
+                .map(entry -> entry.getKey() + ". " + entry.getValue())
                 .map(this::createAttachment)
                 .toArray(Attachment[]::new);
         richMessage.setAttachments(cuisineArray);

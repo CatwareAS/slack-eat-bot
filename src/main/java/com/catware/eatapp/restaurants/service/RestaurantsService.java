@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.text.Collator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -45,8 +47,10 @@ public class RestaurantsService {
     @Cacheable("categories-map")
     public Map<Integer, String> getAllCategoriesPickMap() {
         final AtomicInteger counter = new AtomicInteger();
+        Collator uaCollator = Collator.getInstance(new Locale("uk", "UA"));
+        uaCollator.setStrength(Collator.PRIMARY);
         return getAllCategories().keySet().stream()
-                .sorted(String::compareToIgnoreCase)
+                .sorted(uaCollator::compare)
                 .collect(Collectors.toMap(v -> counter.incrementAndGet(),
                         v -> v, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
