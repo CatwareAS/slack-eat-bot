@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -62,9 +65,15 @@ public class SlackController {
     }
 
     @PostMapping(value = "/random-restaurants", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RichMessage getRandomRestaurants(@RequestParam(value = "exclude", required = false) List<Integer> excludeCuisineNums) {
-        RichMessage richMessage = new RichMessage("Random pick result (the first restaurant is recommended):");
-        Attachment[] restaurants = restaurantsService.getRandomRestaurants(excludeCuisineNums).stream()
+    public RichMessage getRandomRestaurants(@RequestParam(value = "text", required = false) String excludeCuisineNums) {
+        Map<Integer, String> allCategoriesPickMap = restaurantsService.getAllCategoriesPickMap();
+        List<String> excludeCuisineTypes = Arrays.stream(Optional.ofNullable(excludeCuisineNums).orElse("-1").split("\\s+"))
+                .map(Integer::valueOf)
+                .map(allCategoriesPickMap::get)
+                .collect(Collectors.toList());
+        RichMessage richMessage = new RichMessage("Random pick result (Excluded cuisines: "
+                + String.join(", ", excludeCuisineTypes) + ")");
+        Attachment[] restaurants = restaurantsService.getRandomRestaurants(excludeCuisineTypes).stream()
                 .map(Restaurant::toString)
                 .map(this::createAttachment)
                 .toArray(Attachment[]::new);

@@ -55,11 +55,7 @@ public class RestaurantsService {
                         v -> v, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
-    public List<Restaurant> getRandomRestaurants(List<Integer> excludeCuisineNums) {
-        Map<Integer, String> allCategoriesPickMap = getAllCategoriesPickMap();
-        List<String> excludeCuisineTypes = Optional.ofNullable(excludeCuisineNums).orElse(Collections.emptyList()).stream()
-                .map(allCategoriesPickMap::get)
-                .collect(Collectors.toList());
+    public List<Restaurant> getRandomRestaurants(List<String> excludeCuisineTypes) {
         List<Restaurant> restaurants = getAllRestaurants().stream()
                 .filter(r -> !isExcludedRestaurant(r, excludeCuisineTypes))
                 .collect(Collectors.toList());
