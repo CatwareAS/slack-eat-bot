@@ -3,6 +3,7 @@ package com.catware.eatapp.controller;
 import com.catware.eatapp.model.RestaurantsSlackMessage;
 import com.catware.eatapp.model.ui.Element;
 import com.catware.eatapp.model.ui.Option;
+import com.catware.eatapp.restaurants.model.Restaurant;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
 import me.ramswaroop.jbot.core.slack.models.Attachment;
 import me.ramswaroop.jbot.core.slack.models.RichMessage;
@@ -57,6 +58,17 @@ public class SlackController {
                 .map(this::createAttachment)
                 .toArray(Attachment[]::new);
         richMessage.setAttachments(cuisineArray);
+        return richMessage.encodedMessage();
+    }
+
+    @PostMapping(value = "/random-restaurants", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public RichMessage getRandomRestaurants(@RequestParam(value = "exclude", required = false) List<Integer> excludeCuisineNums) {
+        RichMessage richMessage = new RichMessage("Random pick result (the first restaurant is recommended):");
+        Attachment[] restaurants = restaurantsService.getRandomRestaurants(excludeCuisineNums).stream()
+                .map(Restaurant::toString)
+                .map(this::createAttachment)
+                .toArray(Attachment[]::new);
+        richMessage.setAttachments(restaurants);
         return richMessage.encodedMessage();
     }
 

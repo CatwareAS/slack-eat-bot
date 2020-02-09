@@ -7,16 +7,16 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.text.Collator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class RestaurantsService {
+
+    private static final int RESTAURANTS_RANDOM_AMOUNT = 4;
+
     private final RestaurantRepository restaurantRepository;
 
     public RestaurantsService(RestaurantRepository restaurantRepository) {
@@ -55,5 +55,22 @@ public class RestaurantsService {
                         v -> v, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
+    public List<Restaurant> getRandomRestaurants(List<Integer> excludeCuisineNums) {
+        Map<Integer, String> allCategoriesPickMap = getAllCategoriesPickMap();
+        List<String> excludeCuisineTypes = Optional.ofNullable(excludeCuisineNums).orElse(Collections.emptyList()).stream()
+                .map(allCategoriesPickMap::get)
+                .collect(Collectors.toList());
+        List<Restaurant> restaurants = getAllRestaurants().stream()
+                .filter(r -> !isExcludedRestaurant(r, excludeCuisineTypes))
+                .collect(Collectors.toList());
+        Collections.shuffle(restaurants);
+        return restaurants.subList(0, RESTAURANTS_RANDOM_AMOUNT).stream()
+                .sorted(Comparator.comparing(Restaurant::getRating).reversed())
+                .collect(Collectors.toList());
+    }
+
+    private boolean isExcludedRestaurant(Restaurant restaurant, List<String> excludeCuisineTypes) {
+        return restaurant.getCuisineTypes().stream().anyMatch(excludeCuisineTypes::contains);
+    }
 
 }
