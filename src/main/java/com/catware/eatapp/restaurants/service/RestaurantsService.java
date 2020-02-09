@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +29,6 @@ public class RestaurantsService {
     @Cacheable("categories")
     public Map<String, List<Restaurant>> getAllCategories() {
         List<Restaurant> restaurants = getAllRestaurants();
-
         return restaurants.stream()
                 .map(
                         r -> r.getCuisineTypes().stream().collect(Collectors.toMap(c -> c, c -> r))
@@ -39,6 +40,15 @@ public class RestaurantsService {
                                 Collectors.mapping(Map.Entry::getValue, Collectors.toList())
                         )
                 );
+    }
+
+    @Cacheable("categories-map")
+    public Map<Integer, String> getAllCategoriesPickMap() {
+        final AtomicInteger counter = new AtomicInteger();
+        return getAllCategories().keySet().stream()
+                .sorted(String::compareToIgnoreCase)
+                .collect(Collectors.toMap(v -> counter.incrementAndGet(),
+                        v -> v, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
 

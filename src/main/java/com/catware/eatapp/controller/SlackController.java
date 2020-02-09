@@ -4,6 +4,8 @@ import com.catware.eatapp.model.RestaurantsSlackMessage;
 import com.catware.eatapp.model.ui.Element;
 import com.catware.eatapp.model.ui.Option;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
+import me.ramswaroop.jbot.core.slack.models.Attachment;
+import me.ramswaroop.jbot.core.slack.models.RichMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,7 @@ public class SlackController {
     @Autowired
     private RestaurantsService restaurantsService;
 
+    @Deprecated
     @PostMapping(value = "/restaurants", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RestaurantsSlackMessage onReceiveSlashCommand(@RequestParam(value = "team_id", required = false) String teamId,
                                                          @RequestParam(value = "team_domain", required = false) String teamDomain,
@@ -44,6 +47,23 @@ public class SlackController {
         return restaurantsService.getAllRestaurants().stream()
                 .map(r -> new Option(r.getTitle(), r.getTitle()))
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping(value = "/cuisine", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public RichMessage showAllCuisineTypes() {
+        RichMessage richMessage = new RichMessage("Categories of restaurants from UBER EATS");
+        Attachment[] cuisineArray = restaurantsService.getAllCategoriesPickMap().entrySet().stream()
+                .map(entry -> entry.getKey() + ") " + entry.getValue() + ";")
+                .map(this::createAttachment)
+                .toArray(Attachment[]::new);
+        richMessage.setAttachments(cuisineArray);
+        return richMessage.encodedMessage();
+    }
+
+    private Attachment createAttachment(String text) {
+        Attachment attachment = new Attachment();
+        attachment.setText(text);
+        return attachment;
     }
 
 }
