@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,11 +65,19 @@ public class SlackController {
 
     @PostMapping(value = "/random-restaurants", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RichMessage getRandomRestaurants(@RequestParam(value = "text", required = false) String excludeCuisineNums) {
+        if (excludeCuisineNums == null || excludeCuisineNums.trim().isEmpty()) {
+            excludeCuisineNums = "-1";
+        }
         Map<Integer, String> allCategoriesPickMap = restaurantsService.getAllCategoriesPickMap();
-        List<String> excludeCuisineTypes = Arrays.stream(Optional.ofNullable(excludeCuisineNums).orElse("-1").split("\\s+"))
-                .map(Integer::valueOf)
-                .map(allCategoriesPickMap::get)
-                .collect(Collectors.toList());
+        List<String> excludeCuisineTypes;
+        try {
+            excludeCuisineTypes = Arrays.stream(excludeCuisineNums.split("\\s+"))
+                    .map(Integer::valueOf)
+                    .map(allCategoriesPickMap::get)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return new RichMessage("Wrong params for excluded list: " + excludeCuisineNums + ". Use only numbers e.g. 1 6 7");
+        }
         RichMessage richMessage = new RichMessage("Random pick result (Excluded cuisines: "
                 + String.join(", ", excludeCuisineTypes) + ")");
         Attachment[] restaurants = restaurantsService.getRandomRestaurants(excludeCuisineTypes).stream()
