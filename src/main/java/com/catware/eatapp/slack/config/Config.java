@@ -1,6 +1,8 @@
 package com.catware.eatapp.slack.config;
 
 import com.catware.eatapp.slack.handler.HelloCommandHandler;
+import com.catware.eatapp.slack.handler.PreferencesCommandHandler;
+import com.catware.eatapp.slack.utils.DebugMiddleware;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class Config {
     @Value("${slack.botToken}")
     private String botToken;
 
-    public Config(HelloCommandHandler helloCommandHandler, DebugMiddleware debugMiddleware) {
+    public Config(HelloCommandHandler helloCommandHandler, DebugMiddleware debugMiddleware, PreferencesCommandHandler preferencesCommandHandler) {
         this.helloCommandHandler = helloCommandHandler;
         this.debugMiddleware = debugMiddleware;
         this.preferencesCommandHandler = preferencesCommandHandler;
