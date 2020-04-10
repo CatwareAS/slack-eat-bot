@@ -6,7 +6,9 @@ import com.slack.api.bolt.request.builtin.SlashCommandRequest;
 import com.slack.api.bolt.response.Response;
 import org.springframework.stereotype.Component;
 
-import static com.slack.api.model.block.Blocks.*;
+import static com.slack.api.model.block.Blocks.actions;
+import static com.slack.api.model.block.Blocks.asBlocks;
+import static com.slack.api.model.block.Blocks.section;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 import static com.slack.api.model.block.element.BlockElements.asElements;
@@ -16,8 +18,10 @@ import static com.slack.api.model.block.element.BlockElements.button;
 public class HelloCommandHandler implements SlashCommandHandler {
     @Override
     public Response apply(SlashCommandRequest slashCommandRequest, SlashCommandContext context) {
+        String username = slashCommandRequest.getPayload().getUserName();
+        String userId = slashCommandRequest.getPayload().getUserId();
         return context.ack(asBlocks(
-                section(section -> section.text(markdownText(":wave: pong"))),
+                section(section -> section.text(markdownText(":wave: pong. I know that you are " + username + " (" + userId + ")"))),
                 actions(actions -> actions
                         .elements(asElements(
                                 button(b -> b.actionId("ping-again").text(plainText(pt -> pt.text("Ping"))).value("ping"))
