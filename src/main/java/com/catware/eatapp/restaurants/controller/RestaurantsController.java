@@ -5,7 +5,6 @@ import com.catware.eatapp.restaurants.model.Restaurant;
 import com.catware.eatapp.restaurants.model.RestaurantName;
 import com.catware.eatapp.restaurants.service.ChooseRestaurantService;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @RestController
 public class RestaurantsController {
 

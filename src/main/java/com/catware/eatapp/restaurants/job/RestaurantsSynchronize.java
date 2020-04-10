@@ -5,7 +5,8 @@ import com.catware.eatapp.restaurants.dao.UrlRepository;
 import com.catware.eatapp.restaurants.model.Restaurant;
 import com.catware.eatapp.restaurants.model.Url;
 import com.catware.eatapp.restaurants.service.ParseService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,8 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Slf4j
 public class RestaurantsSynchronize {
+
+    private static Logger log = LoggerFactory.getLogger(RestaurantsSynchronize.class);
 
     private final ParseService jsoupParseService;
     private final UrlRepository urlRepository;
