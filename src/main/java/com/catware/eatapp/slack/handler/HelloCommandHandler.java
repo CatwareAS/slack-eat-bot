@@ -6,9 +6,7 @@ import com.slack.api.bolt.request.builtin.SlashCommandRequest;
 import com.slack.api.bolt.response.Response;
 import org.springframework.stereotype.Component;
 
-import static com.slack.api.model.block.Blocks.actions;
-import static com.slack.api.model.block.Blocks.asBlocks;
-import static com.slack.api.model.block.Blocks.section;
+import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 import static com.slack.api.model.block.element.BlockElements.asElements;

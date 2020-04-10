@@ -13,11 +13,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class RestaurantsSynchronize {
 
-    private static Logger log = LoggerFactory.getLogger(RestaurantsSynchronize.class);
+    private static final Logger log = LoggerFactory.getLogger(RestaurantsSynchronize.class);
 
     private final ParseService jsoupParseService;
     private final UrlRepository urlRepository;
@@ -35,7 +36,7 @@ public class RestaurantsSynchronize {
         try {
             log.info("Refreshing restaurants started");
             Url url = urlRepository.findAll().blockLast();
-            List<Restaurant> restaurants = jsoupParseService.parsePage(url.getUrl());
+            List<Restaurant> restaurants = jsoupParseService.parsePage(Objects.requireNonNull(url).getUrl());
             restaurants.stream().map(Restaurant::toString).forEach(log::info);
             restaurantRepository.saveAll(restaurants).blockLast();
             log.info("Refreshing restaurants finished");

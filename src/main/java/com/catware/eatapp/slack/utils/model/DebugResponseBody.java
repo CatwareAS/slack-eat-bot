@@ -1,4 +1,4 @@
-package com.catware.eatapp.slack.model;
+package com.catware.eatapp.slack.utils.model;
 
 import java.util.Objects;
 
