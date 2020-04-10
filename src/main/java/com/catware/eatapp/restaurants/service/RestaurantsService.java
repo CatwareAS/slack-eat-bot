@@ -6,7 +6,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.text.Collator;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -63,10 +69,10 @@ public class RestaurantsService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getOnlyCategories() {
+    public Set<String> getOnlyCategories() {
         return getAllRestaurants().stream()
                 .flatMap(r -> r.getCuisineTypes().stream())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     private boolean isExcludedRestaurant(Restaurant restaurant, List<String> excludeCuisineTypes) {
