@@ -63,6 +63,12 @@ public class RestaurantsService {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getOnlyCategories() {
+        return getAllRestaurants().stream()
+                .flatMap(r -> r.getCuisineTypes().stream())
+                .collect(Collectors.toList());
+    }
+
     private boolean isExcludedRestaurant(Restaurant restaurant, List<String> excludeCuisineTypes) {
         return restaurant.getCuisineTypes().stream().anyMatch(excludeCuisineTypes::contains);
     }
