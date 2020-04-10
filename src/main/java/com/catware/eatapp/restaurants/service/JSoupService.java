@@ -1,7 +1,6 @@
 package com.catware.eatapp.restaurants.service;
 
 import com.catware.eatapp.restaurants.model.Restaurant;
-import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("JSoupService")
-@Slf4j
 public class JSoupService implements ParseService {
 
     public static final String ARTICLE = "article";

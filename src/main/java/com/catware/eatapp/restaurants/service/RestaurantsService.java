@@ -2,17 +2,21 @@ package com.catware.eatapp.restaurants.service;
 
 import com.catware.eatapp.restaurants.dao.RestaurantRepository;
 import com.catware.eatapp.restaurants.model.Restaurant;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.text.Collator;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class RestaurantsService {
 
     private static final int RESTAURANTS_RANDOM_AMOUNT = 4;
@@ -63,6 +67,12 @@ public class RestaurantsService {
         return restaurants.subList(0, RESTAURANTS_RANDOM_AMOUNT).stream()
                 .sorted(Comparator.comparing(Restaurant::getRating).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public Set<String> getOnlyCategories() {
+        return getAllRestaurants().stream()
+                .flatMap(r -> r.getCuisineTypes().stream())
+                .collect(Collectors.toSet());
     }
 
     private boolean isExcludedRestaurant(Restaurant restaurant, List<String> excludeCuisineTypes) {

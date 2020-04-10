@@ -16,8 +16,10 @@ import static com.slack.api.model.block.element.BlockElements.button;
 public class HelloCommandHandler implements SlashCommandHandler {
     @Override
     public Response apply(SlashCommandRequest slashCommandRequest, SlashCommandContext context) {
+        String username = slashCommandRequest.getPayload().getUserName();
+        String userId = slashCommandRequest.getPayload().getUserId();
         return context.ack(asBlocks(
-                section(section -> section.text(markdownText(":wave: pong"))),
+                section(section -> section.text(markdownText(":wave: pong. I know that you are " + username + " (" + userId + ")"))),
                 actions(actions -> actions
                         .elements(asElements(
                                 button(b -> b.actionId("ping-again").text(plainText(pt -> pt.text("Ping"))).value("ping"))
