@@ -9,14 +9,14 @@ import java.util.Objects;
 public class Url {
     @DocumentId
     private String title;
-    private String url;
+    private String urlString;
 
     public Url() {
     }
 
-    public Url(String title, String url) {
+    public Url(String title, String urlString) {
         this.title = title;
-        this.url = url;
+        this.urlString = urlString;
     }
 
     public String getTitle() {
@@ -27,19 +27,19 @@ public class Url {
         this.title = title;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUrlString() {
+        return urlString;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrlString(String urlString) {
+        this.urlString = urlString;
     }
 
     @Override
     public String toString() {
         return "Url{" +
                 "title='" + title + '\'' +
-                ", url='" + url + '\'' +
+                ", url='" + urlString + '\'' +
                 '}';
     }
 
@@ -53,11 +53,11 @@ public class Url {
         }
         Url url1 = (Url) o;
         return Objects.equals(title, url1.title) &&
-                Objects.equals(url, url1.url);
+                Objects.equals(urlString, url1.urlString);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, url);
+        return Objects.hash(title, urlString);
     }
 }

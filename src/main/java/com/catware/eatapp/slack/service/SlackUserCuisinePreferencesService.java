@@ -5,8 +5,6 @@ import com.catware.eatapp.restaurants.service.UserCuisinePreferencesService;
 import com.catware.eatapp.slack.config.Actions;
 import com.slack.api.Slack;
 import com.slack.api.model.block.composition.OptionObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,6 @@ import static com.slack.api.webhook.WebhookPayloads.payload;
 @Service
 public class SlackUserCuisinePreferencesService {
 
-    private static final Logger log = LoggerFactory.getLogger(SlackUserCuisinePreferencesService.class);
     private final Slack slack;
     private final RestaurantsService restaurantsService;
     private final UserCuisinePreferencesService userCuisinePreferencesService;

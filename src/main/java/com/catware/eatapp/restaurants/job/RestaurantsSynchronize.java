@@ -36,7 +36,7 @@ public class RestaurantsSynchronize {
         try {
             log.info("Refreshing restaurants started");
             Url url = urlRepository.findAll().blockLast();
-            List<Restaurant> restaurants = jsoupParseService.parsePage(Objects.requireNonNull(url).getUrl());
+            List<Restaurant> restaurants = jsoupParseService.parsePage(Objects.requireNonNull(url).getUrlString());
             restaurants.stream().map(Restaurant::toString).forEach(log::info);
             restaurantRepository.saveAll(restaurants).blockLast();
             log.info("Refreshing restaurants finished");

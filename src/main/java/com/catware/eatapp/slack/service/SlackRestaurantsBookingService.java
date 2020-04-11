@@ -9,8 +9,6 @@ import com.catware.eatapp.restaurants.service.UserCuisinePreferencesService;
 import com.catware.eatapp.slack.config.Actions;
 import com.catware.eatapp.slack.config.Commands;
 import com.slack.api.Slack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +26,6 @@ import static com.slack.api.webhook.WebhookPayloads.payload;
 @Service
 public class SlackRestaurantsBookingService {
 
-    private static final Logger log = LoggerFactory.getLogger(SlackRestaurantsBookingService.class);
     private final RestaurantsService restaurantsService;
     private final QuarantinedRestaurantService quarantinedRestaurantService;
     private final Slack slack;

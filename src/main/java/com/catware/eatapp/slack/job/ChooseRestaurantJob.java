@@ -1,8 +1,6 @@
 package com.catware.eatapp.slack.job;
 
 import com.catware.eatapp.slack.service.SlackRestaurantsBookingService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +8,6 @@ import java.io.IOException;
 
 @Service
 public class ChooseRestaurantJob {
-
-    private static final Logger log = LoggerFactory.getLogger(ChooseRestaurantJob.class);
 
     private final SlackRestaurantsBookingService slackRestaurantsBookingService;
 

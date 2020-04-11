@@ -5,7 +5,6 @@ import com.catware.eatapp.restaurants.model.QuarantinedRestaurant;
 import com.catware.eatapp.restaurants.model.Restaurant;
 import com.catware.eatapp.restaurants.service.QuarantinedRestaurantService;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
-import com.catware.eatapp.slack.job.ChooseRestaurantJob;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,15 +18,13 @@ public class RestaurantsController {
     private final RestaurantsService restaurantsService;
     private final RestaurantsSynchronize restaurantsSynchronize;
     private final QuarantinedRestaurantService quarantinedRestaurantService;
-    private final ChooseRestaurantJob chooseRestaurantJob;
 
     public RestaurantsController(RestaurantsService restaurantsService,
                                  RestaurantsSynchronize restaurantsSynchronize,
-                                 QuarantinedRestaurantService quarantinedRestaurantService, ChooseRestaurantJob chooseRestaurantJob) {
+                                 QuarantinedRestaurantService quarantinedRestaurantService) {
         this.restaurantsService = restaurantsService;
         this.restaurantsSynchronize = restaurantsSynchronize;
         this.quarantinedRestaurantService = quarantinedRestaurantService;
-        this.chooseRestaurantJob = chooseRestaurantJob;
     }
 
     @GetMapping("/restaurants")

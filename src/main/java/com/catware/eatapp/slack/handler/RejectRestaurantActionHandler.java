@@ -5,16 +5,12 @@ import com.slack.api.bolt.context.builtin.ActionContext;
 import com.slack.api.bolt.handler.builtin.BlockActionHandler;
 import com.slack.api.bolt.request.builtin.BlockActionRequest;
 import com.slack.api.bolt.response.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 @Service
 public class RejectRestaurantActionHandler implements BlockActionHandler {
-
-    private static final Logger log = LoggerFactory.getLogger(RejectRestaurantActionHandler.class);
 
     private final SlackRestaurantsBookingService slackRestaurantsBookingService;
 

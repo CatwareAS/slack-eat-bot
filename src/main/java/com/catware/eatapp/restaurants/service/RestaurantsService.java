@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 @Service
 public class RestaurantsService {
 
-    private static final int RESTAURANTS_RANDOM_AMOUNT = 4;
-
     private final RestaurantRepository restaurantRepository;
 
     public RestaurantsService(RestaurantRepository restaurantRepository) {
