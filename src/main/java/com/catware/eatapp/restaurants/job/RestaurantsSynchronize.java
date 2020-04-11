@@ -30,7 +30,7 @@ public class RestaurantsSynchronize {
         this.restaurantRepository = restaurantRepository;
     }
 
-    @Scheduled(cron = "0 0 11 * * *")
+    @Scheduled(cron = "0 0 12 * * *")
     @CacheEvict(cacheNames = {"restaurants", "categories"})
     public void refreshRestaurants() {
         try {

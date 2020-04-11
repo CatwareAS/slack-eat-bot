@@ -5,16 +5,18 @@ import org.springframework.cloud.gcp.data.firestore.Document;
 
 import java.util.Objects;
 
-@Document(collectionName = "restaurant-names")
-public class RestaurantName {
+@Document(collectionName = "quarantined-restaurants")
+public class QuarantinedRestaurant {
 
     @DocumentId
     private String restaurantName;
 
-    public RestaurantName() {
+    private long id;
+
+    public QuarantinedRestaurant() {
     }
 
-    public RestaurantName(String restaurantName) {
+    public QuarantinedRestaurant(String restaurantName) {
         this.restaurantName = restaurantName;
     }
 
@@ -26,6 +28,14 @@ public class RestaurantName {
         this.restaurantName = restaurantName;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -34,7 +44,7 @@ public class RestaurantName {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RestaurantName that = (RestaurantName) o;
+        QuarantinedRestaurant that = (QuarantinedRestaurant) o;
         return Objects.equals(restaurantName, that.restaurantName);
     }
 

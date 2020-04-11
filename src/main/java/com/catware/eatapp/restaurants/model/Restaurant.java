@@ -4,6 +4,7 @@ import com.google.cloud.firestore.annotation.DocumentId;
 import org.springframework.cloud.gcp.data.firestore.Document;
 
 import java.util.List;
+import java.util.Objects;
 
 @Document(collectionName = "restaurants")
 public class Restaurant {
@@ -74,6 +75,24 @@ public class Restaurant {
 
     public void setReviewsCount(int reviewsCount) {
         this.reviewsCount = reviewsCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurant that = (Restaurant) o;
+        return Double.compare(that.rating, rating) == 0 &&
+                reviewsCount == that.reviewsCount &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(priceLevel, that.priceLevel) &&
+                Objects.equals(cuisineTypes, that.cuisineTypes) &&
+                Objects.equals(arrivalTime, that.arrivalTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, priceLevel, cuisineTypes, arrivalTime, rating, reviewsCount);
     }
 
     @Override

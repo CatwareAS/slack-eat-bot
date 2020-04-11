@@ -3,30 +3,29 @@ package com.catware.eatapp.restaurants.model;
 import com.google.cloud.firestore.annotation.DocumentId;
 import org.springframework.cloud.gcp.data.firestore.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-@Document(collectionName = "user")
-public class SlackUser {
+@Document(collectionName = "user-cuisine-preferences")
+public class UserCuisinePreferences {
     @DocumentId
-    private String id;
+    private String userId;
     private List<String> excludeCuisineTypes;
 
-    public SlackUser() {
+    public UserCuisinePreferences() {
     }
 
-    public SlackUser(String id) {
-        this.id = id;
-        this.excludeCuisineTypes = new ArrayList<>();
+    public UserCuisinePreferences(String userId, List<String> excludeCuisineTypes) {
+        this.userId = userId;
+        this.excludeCuisineTypes = excludeCuisineTypes;
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public List<String> getExcludeCuisineTypes() {
