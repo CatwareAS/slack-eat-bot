@@ -4,11 +4,13 @@ import com.catware.eatapp.restaurants.service.RestaurantsService;
 import com.catware.eatapp.restaurants.service.UserCuisinePreferencesService;
 import com.catware.eatapp.slack.config.Actions;
 import com.slack.api.Slack;
+import com.slack.api.bolt.context.builtin.SlashCommandContext;
+import com.slack.api.bolt.response.Response;
 import com.slack.api.model.block.composition.OptionObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +18,6 @@ import static com.slack.api.model.block.Blocks.asBlocks;
 import static com.slack.api.model.block.Blocks.section;
 import static com.slack.api.model.block.composition.BlockCompositions.*;
 import static com.slack.api.model.block.element.BlockElements.multiStaticSelect;
-import static com.slack.api.webhook.WebhookPayloads.payload;
 
 @Service
 public class SlackUserCuisinePreferencesService {
@@ -24,7 +25,7 @@ public class SlackUserCuisinePreferencesService {
     private final Slack slack;
     private final RestaurantsService restaurantsService;
     private final UserCuisinePreferencesService userCuisinePreferencesService;
-    @Value("${slack.channel.random.url}")
+    @Value("${slack.channel.url}")
     private String channelUrl;
 
     public SlackUserCuisinePreferencesService(Slack slack,
@@ -35,23 +36,20 @@ public class SlackUserCuisinePreferencesService {
         this.userCuisinePreferencesService = userCuisinePreferencesService;
     }
 
-    public void showUserCuisinePreferences(String userId) throws IOException {
+    public Response showUserCuisinePreferences(String userId, SlashCommandContext ctx) {
         List<String> allRestaurantCategories = restaurantsService.getAllCategoriesNames();
         List<String> userExcludedCuisineTypes = userCuisinePreferencesService.getUserExcludedCuisineTypes(userId);
 
-        slack.send(channelUrl, payload(p -> p
-                .blocks(asBlocks(
-                        section(section -> section
-                                .text(markdownText(":knife_fork_plate: *Select cuisine categories that should be excluded*"))
-                                .accessory(multiStaticSelect(staticSelect -> staticSelect
-                                        .actionId(Actions.SAVE_USER_CUISINE_PREFERENCES)
-                                        .options(toOptions(allRestaurantCategories))
-                                        .initialOptions(toOptions(userExcludedCuisineTypes))
-                                ))
-                        )
-                ))
+        return ctx.ack(asBlocks(
+                section(section -> section
+                        .text(markdownText(":knife_fork_plate: *Select cuisine categories that should be excluded*"))
+                        .accessory(multiStaticSelect(staticSelect -> staticSelect
+                                .actionId(Actions.SAVE_USER_CUISINE_PREFERENCES)
+                                .options(toOptions(allRestaurantCategories))
+                                .initialOptions(toOptions(userExcludedCuisineTypes))
+                        ))
+                )
         ));
-
     }
 
     public void saveUserCuisinePreferences(String userId, List<String> userCuisinePreferences) {
@@ -63,6 +61,13 @@ public class SlackUserCuisinePreferencesService {
         if (strings.isEmpty()) {
             return null;
         }
-        return strings.stream().map(s -> option(plainText(s), s)).collect(Collectors.toList());
+        return strings.stream().map(s -> option(plainText(encode(s)), encode(s))).collect(Collectors.toList());
     }
+
+    //FUCKING STUPID SLACK!!!
+    private String encode(String s) {
+        return new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+    }
+
+
 }

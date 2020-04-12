@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,12 +37,28 @@ public class RestaurantsSynchronize {
         try {
             log.info("Refreshing restaurants started");
             Url url = urlRepository.findAll().blockLast();
-            List<Restaurant> restaurants = jsoupParseService.parsePage(Objects.requireNonNull(url).getUrlString());
+            List<Restaurant> restaurants = getRestaurants(url);
             restaurants.stream().map(Restaurant::toString).forEach(log::info);
             restaurantRepository.saveAll(restaurants).blockLast();
             log.info("Refreshing restaurants finished");
         } catch (Exception e) {
             log.error("Exception while refreshing restaurants list", e);
         }
+    }
+
+    private List<Restaurant> getRestaurants(Url url) throws InterruptedException {
+        List<Restaurant> restaurants = Collections.emptyList();
+        int attempts = 5;
+        while (attempts > 0) {
+            try {
+                restaurants = jsoupParseService.parsePage(Objects.requireNonNull(url).getUrlString());
+                attempts = -1;
+            } catch (Exception e) {
+                log.error(String.format("Exception happened: %s, %s", e.toString(), e.getMessage()));
+                attempts--;
+                Thread.sleep(500);
+            }
+        }
+        return restaurants;
     }
 }

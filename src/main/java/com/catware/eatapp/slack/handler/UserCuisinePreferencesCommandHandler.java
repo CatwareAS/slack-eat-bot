@@ -21,8 +21,7 @@ public class UserCuisinePreferencesCommandHandler implements SlashCommandHandler
     @Override
     public Response apply(SlashCommandRequest req, SlashCommandContext ctx) throws IOException {
         String userId = req.getPayload().getUserId();
-        slackUserCuisinePreferencesService.showUserCuisinePreferences(userId);
-        return ctx.ack();
+        return slackUserCuisinePreferencesService.showUserCuisinePreferences(userId, ctx);
     }
 
 }

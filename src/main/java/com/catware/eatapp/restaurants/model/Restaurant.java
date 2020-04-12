@@ -16,17 +16,21 @@ public class Restaurant {
     private String arrivalTime;
     private double rating;
     private int reviewsCount;
+    private String imageUrl;
+    private String url;
 
     public Restaurant() {
     }
 
-    public Restaurant(String title, String priceLevel, List<String> cuisineTypes, String arrivalTime, double rating, int reviewsCount) {
+    public Restaurant(String title, String priceLevel, List<String> cuisineTypes, String arrivalTime, double rating, int reviewsCount, String imageUrl, String url) {
         this.title = title;
         this.priceLevel = priceLevel;
         this.cuisineTypes = cuisineTypes;
         this.arrivalTime = arrivalTime;
         this.rating = rating;
         this.reviewsCount = reviewsCount;
+        this.imageUrl = imageUrl;
+        this.url = url;
     }
 
     public String getTitle() {
@@ -77,6 +81,22 @@ public class Restaurant {
         this.reviewsCount = reviewsCount;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,16 +107,27 @@ public class Restaurant {
                 Objects.equals(title, that.title) &&
                 Objects.equals(priceLevel, that.priceLevel) &&
                 Objects.equals(cuisineTypes, that.cuisineTypes) &&
-                Objects.equals(arrivalTime, that.arrivalTime);
+                Objects.equals(arrivalTime, that.arrivalTime) &&
+                Objects.equals(imageUrl, that.imageUrl) &&
+                Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, priceLevel, cuisineTypes, arrivalTime, rating, reviewsCount);
+        return Objects.hash(title, priceLevel, cuisineTypes, arrivalTime, rating, reviewsCount, imageUrl, url);
     }
 
     @Override
     public String toString() {
-        return title + " ( rating: " + rating + ", " + "arrival time: " + arrivalTime + ", reviews count: " + reviewsCount + ")";
+        return "Restaurant{" +
+                "title='" + title + '\'' +
+                ", priceLevel='" + priceLevel + '\'' +
+                ", cuisineTypes=" + cuisineTypes +
+                ", arrivalTime='" + arrivalTime + '\'' +
+                ", rating=" + rating +
+                ", reviewsCount=" + reviewsCount +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

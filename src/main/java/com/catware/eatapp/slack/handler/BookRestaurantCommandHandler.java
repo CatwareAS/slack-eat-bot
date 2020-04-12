@@ -7,6 +7,8 @@ import com.slack.api.bolt.request.builtin.SlashCommandRequest;
 import com.slack.api.bolt.response.Response;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+
 import static com.slack.api.model.block.Blocks.asBlocks;
 import static com.slack.api.model.block.Blocks.section;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
@@ -21,13 +23,11 @@ public class BookRestaurantCommandHandler implements SlashCommandHandler {
     }
 
     @Override
-    public Response apply(SlashCommandRequest slashCommandRequest, SlashCommandContext context) {
+    public Response apply(SlashCommandRequest slashCommandRequest, SlashCommandContext context) throws UnsupportedEncodingException {
 
         String userId = slashCommandRequest.getPayload().getUserId();
         userAvailabilityService.registerUser(userId);
 
-        return context.ack(asBlocks(
-                section(section -> section.text(markdownText(":wave: You are registered for next restaurant order")))
-        ));
+        return context.ack(asBlocks(section(section -> section.text(markdownText(":wave: You are registered for next restaurant order")))));
     }
 }
