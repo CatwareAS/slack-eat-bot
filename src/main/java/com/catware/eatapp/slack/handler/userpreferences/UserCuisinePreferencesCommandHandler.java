@@ -1,4 +1,4 @@
-package com.catware.eatapp.slack.handler;
+package com.catware.eatapp.slack.handler.userpreferences;
 
 import com.catware.eatapp.slack.service.SlackUserCuisinePreferencesService;
 import com.slack.api.bolt.context.builtin.SlashCommandContext;
@@ -6,8 +6,6 @@ import com.slack.api.bolt.handler.builtin.SlashCommandHandler;
 import com.slack.api.bolt.request.builtin.SlashCommandRequest;
 import com.slack.api.bolt.response.Response;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 public class UserCuisinePreferencesCommandHandler implements SlashCommandHandler {
@@ -19,7 +17,7 @@ public class UserCuisinePreferencesCommandHandler implements SlashCommandHandler
     }
 
     @Override
-    public Response apply(SlashCommandRequest req, SlashCommandContext ctx) throws IOException {
+    public Response apply(SlashCommandRequest req, SlashCommandContext ctx) {
         String userId = req.getPayload().getUserId();
         return slackUserCuisinePreferencesService.showUserCuisinePreferences(userId, ctx);
     }

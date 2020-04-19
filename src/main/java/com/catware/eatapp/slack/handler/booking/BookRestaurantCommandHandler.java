@@ -1,4 +1,4 @@
-package com.catware.eatapp.slack.handler;
+package com.catware.eatapp.slack.handler.booking;
 
 import com.catware.eatapp.restaurants.service.UserAvailabilityService;
 import com.slack.api.bolt.context.builtin.SlashCommandContext;

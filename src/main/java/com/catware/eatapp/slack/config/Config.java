@@ -1,10 +1,9 @@
 package com.catware.eatapp.slack.config;
 
-import com.catware.eatapp.slack.handler.BookRestaurantCommandHandler;
-import com.catware.eatapp.slack.handler.RejectRestaurantActionHandler;
-import com.catware.eatapp.slack.handler.UserCuisinePreferencesActionHandler;
-import com.catware.eatapp.slack.handler.UserCuisinePreferencesCommandHandler;
-import com.catware.eatapp.slack.utils.DebugMiddleware;
+import com.catware.eatapp.slack.handler.booking.BookRestaurantCommandHandler;
+import com.catware.eatapp.slack.handler.booking.ProposeNewRestaurantActionHandler;
+import com.catware.eatapp.slack.handler.userpreferences.UserCuisinePreferencesActionHandler;
+import com.catware.eatapp.slack.handler.userpreferences.UserCuisinePreferencesCommandHandler;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,8 @@ public class Config {
 
     private final BookRestaurantCommandHandler bookRestaurantCommandHandler;
     private final UserCuisinePreferencesCommandHandler userCuisinePreferencesCommandHandler;
-    private final RejectRestaurantActionHandler rejectRestaurantActionHandler;
+    private final ProposeNewRestaurantActionHandler proposeNewRestaurantActionHandler;
     private final UserCuisinePreferencesActionHandler userCuisinePreferencesActionHandler;
-
-    private final DebugMiddleware debugMiddleware;
 
     @Value("${slack.signingSecret}")
     private String signingSecret;
@@ -29,14 +26,12 @@ public class Config {
     private String botToken;
 
     public Config(BookRestaurantCommandHandler bookRestaurantCommandHandler,
-                  DebugMiddleware debugMiddleware,
                   UserCuisinePreferencesCommandHandler userCuisinePreferencesCommandHandler,
-                  RejectRestaurantActionHandler rejectRestaurantActionHandler,
+                  ProposeNewRestaurantActionHandler proposeNewRestaurantActionHandler,
                   UserCuisinePreferencesActionHandler userCuisinePreferencesActionHandler) {
         this.bookRestaurantCommandHandler = bookRestaurantCommandHandler;
-        this.debugMiddleware = debugMiddleware;
         this.userCuisinePreferencesCommandHandler = userCuisinePreferencesCommandHandler;
-        this.rejectRestaurantActionHandler = rejectRestaurantActionHandler;
+        this.proposeNewRestaurantActionHandler = proposeNewRestaurantActionHandler;
         this.userCuisinePreferencesActionHandler = userCuisinePreferencesActionHandler;
     }
 
@@ -52,11 +47,9 @@ public class Config {
     public App app(@Autowired AppConfig appConfig) {
         App app = new App(appConfig);
 
-        app.use(debugMiddleware);
-
         app.command(Commands.BOOK_RESTAURANT, bookRestaurantCommandHandler);
         app.command(Commands.SHOW_USER_CUISINES, userCuisinePreferencesCommandHandler);
-        app.blockAction(Actions.REJECT_RESTAURANT, rejectRestaurantActionHandler);
+        app.blockAction(Actions.REJECT_RESTAURANT, proposeNewRestaurantActionHandler);
         app.blockAction(Actions.SAVE_USER_CUISINE_PREFERENCES, userCuisinePreferencesActionHandler);
 
         return app;

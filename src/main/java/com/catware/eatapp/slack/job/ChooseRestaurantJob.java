@@ -15,17 +15,17 @@ public class ChooseRestaurantJob {
         this.slackRestaurantsBookingService = slackRestaurantsBookingService;
     }
 
-    @Scheduled(cron = "0 0 10 * * FRI")
+    @Scheduled(cron = "${slack.jobs.remind-to-apply-for-restaurant}")
     public void remindUsersToApplyForFood() throws IOException {
         slackRestaurantsBookingService.remindUsersToApplyForFood();
     }
 
-    @Scheduled(cron = "0 0 11 * * FRI")
+    @Scheduled(cron = "${slack.jobs.propose-restaurant}")
     public void proposeUsersRestaurant() throws IOException {
         slackRestaurantsBookingService.proposeUsersRestaurant();
     }
 
-    @Scheduled(cron = "0 20 11 * * FRI")
+    @Scheduled(cron = "${slack.jobs.message-about-chosen-restaurant}")
     public void chooseRestaurant() throws IOException {
         slackRestaurantsBookingService.chooseRestaurant();
     }

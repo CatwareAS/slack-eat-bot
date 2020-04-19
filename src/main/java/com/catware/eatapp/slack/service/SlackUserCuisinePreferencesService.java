@@ -3,7 +3,6 @@ package com.catware.eatapp.slack.service;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
 import com.catware.eatapp.restaurants.service.UserCuisinePreferencesService;
 import com.catware.eatapp.slack.config.Actions;
-import com.slack.api.Slack;
 import com.slack.api.bolt.context.builtin.SlashCommandContext;
 import com.slack.api.bolt.response.Response;
 import com.slack.api.model.block.composition.OptionObject;
@@ -22,16 +21,13 @@ import static com.slack.api.model.block.element.BlockElements.multiStaticSelect;
 @Service
 public class SlackUserCuisinePreferencesService {
 
-    private final Slack slack;
     private final RestaurantsService restaurantsService;
     private final UserCuisinePreferencesService userCuisinePreferencesService;
     @Value("${slack.channel.url}")
     private String channelUrl;
 
-    public SlackUserCuisinePreferencesService(Slack slack,
-                                              RestaurantsService restaurantsService,
+    public SlackUserCuisinePreferencesService(RestaurantsService restaurantsService,
                                               UserCuisinePreferencesService userCuisinePreferencesService) {
-        this.slack = slack;
         this.restaurantsService = restaurantsService;
         this.userCuisinePreferencesService = userCuisinePreferencesService;
     }

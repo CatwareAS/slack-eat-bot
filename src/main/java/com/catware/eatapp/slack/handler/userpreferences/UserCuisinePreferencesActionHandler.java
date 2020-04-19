@@ -1,4 +1,4 @@
-package com.catware.eatapp.slack.handler;
+package com.catware.eatapp.slack.handler.userpreferences;
 
 import com.catware.eatapp.slack.service.SlackUserCuisinePreferencesService;
 import com.slack.api.app_backend.interactive_components.payload.BlockActionPayload;

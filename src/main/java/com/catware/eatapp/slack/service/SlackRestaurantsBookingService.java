@@ -71,7 +71,6 @@ public class SlackRestaurantsBookingService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
-        //TODO: test me properly
         allRestaurants.removeIf(r -> !Collections.disjoint(allIgnoredCuisineTypes, r.getCuisineTypes()));
 
         Optional<Restaurant> restaurant = allRestaurants.stream()
