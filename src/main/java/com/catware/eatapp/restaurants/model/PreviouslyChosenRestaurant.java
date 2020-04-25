@@ -5,18 +5,18 @@ import org.springframework.cloud.gcp.data.firestore.Document;
 
 import java.util.Objects;
 
-@Document(collectionName = "quarantined-restaurants")
-public class QuarantinedRestaurant {
+@Document(collectionName = "previously-chosen-restaurants")
+public class PreviouslyChosenRestaurant {
 
     @DocumentId
     private String restaurantName;
 
     private long id;
 
-    public QuarantinedRestaurant() {
+    public PreviouslyChosenRestaurant() {
     }
 
-    public QuarantinedRestaurant(String restaurantName) {
+    public PreviouslyChosenRestaurant(String restaurantName) {
         this.restaurantName = restaurantName;
     }
 
@@ -44,7 +44,7 @@ public class QuarantinedRestaurant {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuarantinedRestaurant that = (QuarantinedRestaurant) o;
+        PreviouslyChosenRestaurant that = (PreviouslyChosenRestaurant) o;
         return Objects.equals(restaurantName, that.restaurantName);
     }
 

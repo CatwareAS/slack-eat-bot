@@ -1,9 +1,9 @@
 package com.catware.eatapp.restaurants.controller;
 
 import com.catware.eatapp.restaurants.job.RestaurantsSynchronize;
-import com.catware.eatapp.restaurants.model.QuarantinedRestaurant;
+import com.catware.eatapp.restaurants.model.PreviouslyChosenRestaurant;
 import com.catware.eatapp.restaurants.model.Restaurant;
-import com.catware.eatapp.restaurants.service.QuarantinedRestaurantService;
+import com.catware.eatapp.restaurants.service.PreviouslyChosenRestaurantsService;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +17,14 @@ public class RestaurantsController {
 
     private final RestaurantsService restaurantsService;
     private final RestaurantsSynchronize restaurantsSynchronize;
-    private final QuarantinedRestaurantService quarantinedRestaurantService;
+    private final PreviouslyChosenRestaurantsService previouslyChosenRestaurantsService;
 
     public RestaurantsController(RestaurantsService restaurantsService,
                                  RestaurantsSynchronize restaurantsSynchronize,
-                                 QuarantinedRestaurantService quarantinedRestaurantService) {
+                                 PreviouslyChosenRestaurantsService previouslyChosenRestaurantsService) {
         this.restaurantsService = restaurantsService;
         this.restaurantsSynchronize = restaurantsSynchronize;
-        this.quarantinedRestaurantService = quarantinedRestaurantService;
+        this.previouslyChosenRestaurantsService = previouslyChosenRestaurantsService;
     }
 
     @GetMapping("/restaurants")
@@ -44,8 +44,8 @@ public class RestaurantsController {
     }
 
     @GetMapping("/chosen-restaurants")
-    public ResponseEntity<List<QuarantinedRestaurant>> getAllChosenRestaurants() {
-        return ResponseEntity.ok(quarantinedRestaurantService.getAllQuarantinedRestaurantsSortedById());
+    public ResponseEntity<List<PreviouslyChosenRestaurant>> getAllChosenRestaurants() {
+        return ResponseEntity.ok(previouslyChosenRestaurantsService.getAllQuarantinedRestaurantsSortedById());
     }
 
 }

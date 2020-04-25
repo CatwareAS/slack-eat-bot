@@ -1,7 +1,7 @@
 package com.catware.eatapp.restaurants.service;
 
 import com.catware.eatapp.restaurants.dao.QuarantinedRestaurantRepository;
-import com.catware.eatapp.restaurants.model.QuarantinedRestaurant;
+import com.catware.eatapp.restaurants.model.PreviouslyChosenRestaurant;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -9,22 +9,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class QuarantinedRestaurantService {
+public class PreviouslyChosenRestaurantsService {
 
     private static final int RESTAURANTS_MAX_COUNT = 5;
 
     private final QuarantinedRestaurantRepository quarantinedRestaurantRepository;
 
-    public QuarantinedRestaurantService(QuarantinedRestaurantRepository quarantinedRestaurantRepository) {
+    public PreviouslyChosenRestaurantsService(QuarantinedRestaurantRepository quarantinedRestaurantRepository) {
         this.quarantinedRestaurantRepository = quarantinedRestaurantRepository;
     }
 
-    public void addRestaurant(QuarantinedRestaurant quarantinedRestaurant) {
-        List<QuarantinedRestaurant> allChosenRestaurants = getAllQuarantinedRestaurantsSortedById();
+    public void addRestaurant(PreviouslyChosenRestaurant restaurant) {
+        List<PreviouslyChosenRestaurant> allChosenRestaurants = getAllQuarantinedRestaurantsSortedById();
 
-        quarantinedRestaurant.setId(getMaxId(allChosenRestaurants) + 1);
+        restaurant.setId(getMaxId(allChosenRestaurants) + 1);
 
-        allChosenRestaurants.add(quarantinedRestaurant);
+        allChosenRestaurants.add(restaurant);
 
         if (allChosenRestaurants.size() == RESTAURANTS_MAX_COUNT + 1) {
             allChosenRestaurants.remove(0);
@@ -33,13 +33,13 @@ public class QuarantinedRestaurantService {
         quarantinedRestaurantRepository.saveAll(allChosenRestaurants).blockFirst();
     }
 
-    public List<QuarantinedRestaurant> getAllQuarantinedRestaurantsSortedById() {
+    public List<PreviouslyChosenRestaurant> getAllQuarantinedRestaurantsSortedById() {
         return quarantinedRestaurantRepository.findAll().toStream()
-                .sorted(Comparator.comparing(QuarantinedRestaurant::getId))
+                .sorted(Comparator.comparing(PreviouslyChosenRestaurant::getId))
                 .collect(Collectors.toList());
     }
 
-    private long getMaxId(List<QuarantinedRestaurant> restaurants) {
+    private long getMaxId(List<PreviouslyChosenRestaurant> restaurants) {
         if (restaurants.isEmpty()) {
             return 0L;
         }

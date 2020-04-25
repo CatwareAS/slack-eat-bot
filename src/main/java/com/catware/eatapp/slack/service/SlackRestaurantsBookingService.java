@@ -1,8 +1,8 @@
 package com.catware.eatapp.slack.service;
 
-import com.catware.eatapp.restaurants.model.QuarantinedRestaurant;
+import com.catware.eatapp.restaurants.model.PreviouslyChosenRestaurant;
 import com.catware.eatapp.restaurants.model.Restaurant;
-import com.catware.eatapp.restaurants.service.QuarantinedRestaurantService;
+import com.catware.eatapp.restaurants.service.PreviouslyChosenRestaurantsService;
 import com.catware.eatapp.restaurants.service.RestaurantsService;
 import com.catware.eatapp.restaurants.service.UserAvailabilityService;
 import com.catware.eatapp.restaurants.service.UserCuisinePreferencesService;
@@ -27,7 +27,7 @@ import static com.slack.api.webhook.WebhookPayloads.payload;
 public class SlackRestaurantsBookingService {
 
     private final RestaurantsService restaurantsService;
-    private final QuarantinedRestaurantService quarantinedRestaurantService;
+    private final PreviouslyChosenRestaurantsService previouslyChosenRestaurantsService;
     private final Slack slack;
     private final UserAvailabilityService userAvailabilityService;
     private final UserCuisinePreferencesService userCuisinePreferencesService;
@@ -35,11 +35,11 @@ public class SlackRestaurantsBookingService {
     private String channelUrl;
 
     public SlackRestaurantsBookingService(RestaurantsService restaurantsService,
-                                          QuarantinedRestaurantService quarantinedRestaurantService,
+                                          PreviouslyChosenRestaurantsService previouslyChosenRestaurantsService,
                                           Slack slack, UserAvailabilityService userAvailabilityService,
                                           UserCuisinePreferencesService userCuisinePreferencesService) {
         this.restaurantsService = restaurantsService;
-        this.quarantinedRestaurantService = quarantinedRestaurantService;
+        this.previouslyChosenRestaurantsService = previouslyChosenRestaurantsService;
         this.slack = slack;
         this.userAvailabilityService = userAvailabilityService;
         this.userCuisinePreferencesService = userCuisinePreferencesService;
@@ -50,7 +50,8 @@ public class SlackRestaurantsBookingService {
                 .blocks(asBlocks(
                         section(section -> section.text(markdownText("*Remember to apply for food ordering*"))),
                         divider(),
-                        section(section -> section.text(markdownText("You can do it any time. To apply - use command `" + Commands.BOOK_RESTAURANT + "`")))
+                        section(section -> section.text(markdownText("You can do it any time. To apply - use command `" + Commands.BOOK_RESTAURANT + "`\n"))),
+                        section(section -> section.text(markdownText("You can change your cuisines preferences. To do this - use command `" + Commands.SHOW_USER_CUISINES + "`")))
 
                 ))
         ));
@@ -59,8 +60,8 @@ public class SlackRestaurantsBookingService {
     public void proposeUsersRestaurant() throws IOException {
         List<Restaurant> allRestaurants = restaurantsService.getAllRestaurants();
 
-        List<String> previouslyChosenRestaurants = quarantinedRestaurantService.getAllQuarantinedRestaurantsSortedById().stream()
-                .map(QuarantinedRestaurant::getRestaurantName)
+        List<String> previouslyChosenRestaurants = previouslyChosenRestaurantsService.getAllQuarantinedRestaurantsSortedById().stream()
+                .map(PreviouslyChosenRestaurant::getRestaurantName)
                 .collect(Collectors.toList());
 
         allRestaurants.removeIf(r -> previouslyChosenRestaurants.contains(r.getTitle()));
@@ -73,12 +74,11 @@ public class SlackRestaurantsBookingService {
 
         allRestaurants.removeIf(r -> !Collections.disjoint(allIgnoredCuisineTypes, r.getCuisineTypes()));
 
-        Optional<Restaurant> restaurant = allRestaurants.stream()
-                .max(Comparator.comparing(Restaurant::getRating));
+        Optional<Restaurant> restaurant = allRestaurants.stream().max(Comparator.comparing(Restaurant::getRating));
 
         if (restaurant.isPresent()) {
 
-            quarantinedRestaurantService.addRestaurant(new QuarantinedRestaurant(restaurant.get().getTitle()));
+            previouslyChosenRestaurantsService.addRestaurant(new PreviouslyChosenRestaurant(restaurant.get().getTitle()));
 
             slack.send(channelUrl, payload(p -> p
                     .blocks(asBlocks(
@@ -91,7 +91,7 @@ public class SlackRestaurantsBookingService {
                             actions(actions -> actions
                                     .elements(asElements(
                                             button(b -> b
-                                                    .text(plainText(pt -> pt.emoji(true).text("Propose new restaurant")))
+                                                    .text(plainText(pt -> pt.emoji(true).text("Reject this and propose new restaurant")))
                                                     .actionId(Actions.REJECT_RESTAURANT)
                                                     .style("danger")
                                             )
@@ -126,8 +126,8 @@ public class SlackRestaurantsBookingService {
     }
 
     public void chooseRestaurant() throws IOException {
-        List<String> previouslyChosenRestaurants = quarantinedRestaurantService.getAllQuarantinedRestaurantsSortedById().stream()
-                .map(QuarantinedRestaurant::getRestaurantName)
+        List<String> previouslyChosenRestaurants = previouslyChosenRestaurantsService.getAllQuarantinedRestaurantsSortedById().stream()
+                .map(PreviouslyChosenRestaurant::getRestaurantName)
                 .collect(Collectors.toList());
 
         String chosenRestaurant = previouslyChosenRestaurants.get(previouslyChosenRestaurants.size() - 1);
